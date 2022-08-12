@@ -1,0 +1,156 @@
+﻿<Window x:Class="My_Responsive_App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:My_Responsive_App.Extra"
+        xmlns:vm="clr-namespace:My_Responsive_App.ViewModel"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        Height="660"
+        Width="1000"
+        MinWidth="400"
+        ResizeMode="CanResizeWithGrip"
+        x:Name="window"
+        Background="#1f2023">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome/>
+    </WindowChrome.WindowChrome>
+
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="55"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!--// Window's title bar //-->
+        <Grid WindowChrome.IsHitTestVisibleInChrome="True">
+            <!--Close button-->
+            <Button Style="{DynamicResource titleBut}"
+                Command="{Binding CloseAppCommand}"
+                CommandParameter="{Binding ElementName=window}">
+                <Image Source="Assets/closeButton.png"
+                   Width="17"/>
+            </Button>
+
+            <!--Minimize button-->
+            <Button Style="{DynamicResource titleBut}"
+                Margin="0,0,30,0"
+                Command="{Binding MinimizeAppCommand}"
+                CommandParameter="{Binding ElementName=window}">
+                <Image Source="Assets/minimize.png"
+                   Width="17"/>
+            </Button>
+
+            <Button Style="{DynamicResource titleBut}"
+                    Margin="0,0,60,0"
+                    Command="{Binding MaximizeAppCommand}"
+                    CommandParameter="{Binding ElementName=window}">
+
+                <Image Source="Assets/fullScreen.png"
+                       Width="17"/>
+
+            </Button>
+
+            <!--Pin button-->
+            <Button Style="{DynamicResource titleBut}"
+                Margin="0,0,90,0"
+                Command="{Binding PinAppCommand}"
+                CommandParameter="{Binding ElementName=window}">
+                <Image Width="17">
+                    <Image.Style>
+                        <Style TargetType="Image">
+                            <Setter Property="Source" Value="Assets/pin.png"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsPinned}" Value="True">
+                                    <Setter Property="Source" Value="Assets\unpin.png" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </Button>
+
+            <!--// Actor's sign //-->
+            <Grid HorizontalAlignment="Left"
+                  VerticalAlignment="Bottom"
+                  Width="250"
+                  Height="40">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.3*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="0.3*"/>
+                </Grid.ColumnDefinitions>
+
+                <Rectangle Grid.Column="0"
+                           Fill="#27292d"
+                           RadiusY="15"
+                           RadiusX="15"
+                           Grid.ColumnSpan="3"
+                           HorizontalAlignment="Center"
+                           Width="230"/>
+
+                <TextBlock Grid.Column="1"
+                           Foreground="White"
+                           Text="Made by KakoytoChel228"
+                           FontSize="15" FontFamily="Cooper Black"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"/>
+
+                <Rectangle
+                    HorizontalAlignment="Right"
+                    Width="12"
+                    Fill="Red"
+                    RadiusX="7"
+                    RadiusY="7"/>
+                <Rectangle
+                    Grid.Column="2"
+                    HorizontalAlignment="left"
+                    Width="12"
+                    Fill="Red"
+                    RadiusX="7"
+                    RadiusY="7"/>
+
+            </Grid>
+
+        </Grid>
+
+        <!--// Laptop (Default //-->
+        <ContentControl Grid.Row="1">
+            <ContentControl.Style>
+                <Style TargetType="{x:Type ContentControl}">
+                    <Setter Property="ContentTemplate" Value="{StaticResource Laptop_L}"/>
+
+
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType=Window}, Converter={x:Static local:IsGreaterThanConverter.Instance}, ConverterParameter=1200}"
+                                     Value="True">
+                            
+                            <Setter Property="ContentTemplate"
+                                    Value="{StaticResource Desktop_L}"/>
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType=Window}, Converter={x:Static local:IsLessThanConverter.Instance}, ConverterParameter=650}" Value="True">
+                            <Setter Property="ContentTemplate" Value="{StaticResource Mobile_L}"/>
+                        </DataTrigger>
+
+
+                    </Style.Triggers>
+
+
+                </Style>
+
+            </ContentControl.Style>
+        </ContentControl>
+
+
+
+
+    </Grid>
+</Window>
